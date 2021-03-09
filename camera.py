@@ -9,19 +9,25 @@ pygame.init()
 
 pygame.display.set_caption("My pygame Window")
 
-WINDOW_SIZE = (600, 400)
+WINDOW_SIZE = (800, 600)
 
 screen = pygame.display.set_mode(WINDOW_SIZE, 0, 32)
-display = pygame.Surface((600, 400))
+display = pygame.Surface((800, 600))
 
-player_image = pygame.image.load('chicken.png')
+player_image = pygame.image.load('./image/chicken.png')
 player_image.set_colorkey((255, 255, 255))
-grass_image = pygame.image.load('grass.png')
+grass_image = pygame.image.load('./image/grass.png')
+terra_image = pygame.image.load('./image/terra.png')
+terra2_image = pygame.image.load('./image/terra2.png')
+terra3_image = pygame.image.load('./image/terra3.png')
+terra4_image = pygame.image.load('./image/terra4.png')
+terra5_image = pygame.image.load('./image/terra5.png')
+terra6_image = pygame.image.load('./image/terra6.png')
 
 TILE_SIZE = grass_image.get_width()
 
 def load_map(path):
-    f=open(path+'.txt','r')
+    f = open(path+'.txt', 'r')
     data = f.read()
     f.close()
     data = data.split('\n')
@@ -30,7 +36,8 @@ def load_map(path):
         game_map.append(list(row))
     return game_map
 
-game_map = load_map('map')
+
+game_map = load_map('./map/map')
 
 def collision_test(rect, tiles):
     hit_list = []
@@ -66,6 +73,7 @@ def move(rect, movement, tiles):
 
     return rect, collision_types
 
+
 moving_right = False
 moving_left = False
 moving_up = False
@@ -75,13 +83,19 @@ player_location = [50, 50]
 player_y_momentum = 0
 air_timer = 0
 
-scroll = []
+true_scroll = [0, 0]
 
 player_rect = pygame.Rect(
     50, 50, player_image.get_width(), player_image.get_height())
 test_rect = pygame.Rect(100, 100, 100, 50)
 while True:
     display.fill((146, 244, 255))
+    
+    true_scroll[0] += ((player_rect.x - true_scroll[0]) - (WINDOW_SIZE[0]/3 + 10))/20
+    true_scroll[1] += ((player_rect.y - true_scroll[1]) - (WINDOW_SIZE[1]/3 + 10))/20
+    scroll = true_scroll.copy()
+    scroll[0] = int(scroll[0])
+    scroll[1] = int(scroll[1])
 
     y = 0
     tile_rects = []
@@ -89,7 +103,19 @@ while True:
         x = 0
         for tile in row:
             if tile == '1':
-                display.blit(grass_image, (x*TILE_SIZE, y*TILE_SIZE))
+                display.blit(terra_image, (x*TILE_SIZE-scroll[0], y*TILE_SIZE-scroll[1]))
+            if tile == '2':
+                display.blit(terra2_image, (x*TILE_SIZE-scroll[0], y*TILE_SIZE-scroll[1]))
+            if tile == '3':
+                display.blit(terra3_image, (x*TILE_SIZE-scroll[0], y*TILE_SIZE-scroll[1]))
+            if tile == '4':
+                display.blit(terra4_image, (x*TILE_SIZE-scroll[0], y*TILE_SIZE-scroll[1]))
+            if tile == '5':
+                display.blit(terra5_image, (x*TILE_SIZE-scroll[0], y*TILE_SIZE-scroll[1]))
+            if tile == '6':
+                display.blit(terra6_image, (x*TILE_SIZE-scroll[0], y*TILE_SIZE-scroll[1]))
+            if tile == '7':
+                display.blit(grass_image, (x*TILE_SIZE-scroll[0], y*TILE_SIZE-scroll[1]))
             if tile != '0':
                 tile_rects.append(pygame.Rect(
                     x*TILE_SIZE, y*TILE_SIZE, TILE_SIZE, TILE_SIZE))
@@ -97,25 +123,27 @@ while True:
         y += 1
 
     player_movement = [0, 0]
+    
     if moving_right == True:
-        player_movement[0] += 2
+        player_movement[0] += 5
     if moving_left == True:
-        player_movement[0] -= 2
+        player_movement[0] -= 5
 
     player_movement[1] += player_y_momentum
-    player_y_momentum += 0.2
+    player_y_momentum += 0.5
     if player_y_momentum > 3:
         player_y_momentum = 3
 
     player_rect, collisions = move(player_rect, player_movement, tile_rects)
-
+    
     if collisions["bottom"]:
+        stamina += 2
         player_y_momentum = 0
         air_timer = 0
     else:
-        air_timer +=1
-
-    display.blit(player_image, (player_rect.x, player_rect.y))
+        air_timer += 1
+        
+    display.blit(player_image, (player_rect.x - scroll[0], player_rect.y - scroll[1]))
 
     # player_rect.y = player_location[1]
 
