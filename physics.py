@@ -11,8 +11,6 @@ screen = pygame.display.set_mode((500, 500), 0, 32)
 
 player = pygame.Rect(150, 100, 40, 80)
 
-
-
 tiles = [pygame.Rect(150, 450, 50, 50), 
          pygame.Rect(200, 450, 50, 50),
          pygame.Rect(250, 200, 50, 50),
