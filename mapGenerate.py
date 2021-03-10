@@ -15,20 +15,22 @@ for x in range(map_x):
             n_possibles = [0,5,7,6]
             if(y==0):
                 n_possibles = [0,5,7,6]
-                if(mapa[x-1][y]==5):
+                if(mapa[x-1][y]== 5):
                     n_possibles = [3]
                 if(mapa[x-1][y]==7):
                     n_possibles = [1]
                 if(mapa[x-1][y]==6):
                     n_possibles = [2]
-                
             else:
-                n_possibles = [0,5,7,6,3,2,1]
+                if(mapa[x-1][y]==1):
+                    n_possibles = [1]
                 if(mapa[x-1][y]==5):
                     n_possibles = [3]
-                if(mapa[x-1][y]==7 or mapa[x-1][y]==1):
+                if(mapa[x-1][y]==7 and mapa[x][y-1]!=0):
                     n_possibles = [1]
-                if(mapa[x-1][y]==6):
+                if(mapa[x-1][y]==7 and mapa[x][y-1]==0):
+                    n_possibles = [1]
+                if(mapa[x-1][y]==6 or mapa[x-1][y]==2):
                     n_possibles = [2]
                 if(mapa[x-1][y]==3):
                     n_possibles = [0]
