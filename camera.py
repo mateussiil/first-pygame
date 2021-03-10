@@ -14,8 +14,12 @@ WINDOW_SIZE = (800, 600)
 screen = pygame.display.set_mode(WINDOW_SIZE, 0, 32)
 display = pygame.Surface((800, 600))
 
-player_image = pygame.image.load('./image/chicken.png')
+player_image = pygame.image.load('./image/chicken.png').convert()
 player_image.set_colorkey((255, 255, 255))
+
+player_rect = pygame.Rect(100,100,5,13)
+background_objects = [[0.25,[120,10,70,400]],[0.25,[280,30,40,400]],[0.5,[30,40,40,400]],[0.5,[130,90,100,400]],[0.5,[300,80,120,400]]]
+
 grass_image = pygame.image.load('./image/grass.png')
 terra_image = pygame.image.load('./image/terra.png')
 terra2_image = pygame.image.load('./image/terra2.png')
@@ -96,7 +100,15 @@ while True:
     scroll = true_scroll.copy()
     scroll[0] = int(scroll[0])
     scroll[1] = int(scroll[1])
-
+    
+    # paralalex
+    pygame.draw.rect(display,(7,80,75), pygame.Rect(0,250,1500,700))
+    for background_object in background_objects:
+        obj_rect = pygame.Rect(background_object[1][0] - scroll[0]*background_object[0],background_object[1][1] - scroll[1]*background_object[0],background_object[1][2],background_object[1][3])
+        if background_object[0]  == 0.5:
+            pygame.draw.rect(display, (14,222,150),obj_rect)
+        else:
+            pygame.draw.rect(display, (9,91,85),obj_rect)
     y = 0
     tile_rects = []
     for row in game_map:
@@ -137,7 +149,6 @@ while True:
     player_rect, collisions = move(player_rect, player_movement, tile_rects)
     
     if collisions["bottom"]:
-        stamina += 2
         player_y_momentum = 0
         air_timer = 0
     else:
