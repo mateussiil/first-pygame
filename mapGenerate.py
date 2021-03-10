@@ -7,35 +7,40 @@ mapa = []
 
 for x in range(map_x):
     mapa.append([])
+    n_possibles = []
     for y in range(map_y):
-        print(x,y)
-        if(y!=0):
-            if(mapa[x][y-1] == 0):
-                nsramdon = [5,3]
-                if(x!=0):
-                    if(mapa[x-1][y] == 5):
-                        nsramdon = [3]
-                        nramdon = random.randint(0,1)
-                        mapa[x].append(3)
-                        break
-                    else:
-                        mapa[x].append(5)
-                else:
-                    
-                    nramdon = nsramdon[random.randint(0,2)]
-                    mapa[x].append(nramdon)
-
-            if(mapa[x][y-1] == 5):
-                nsramdon = [7,6]
-                nramdon = nsramdon[random.randint(0,2)]
-                mapa[x].append(nramdon)
-            if(mapa[x][y-1] == 7):
-                nsramdon = [7,6]
-                nramdon = nsramdon[random.randint(0,2)]
-                mapa[x].append(nramdon)
+        if(x==0):
+            mapa[x].append(0)
         else:
-            nramdon = random.randint(0,8)
-            mapa[x].append(nramdon)
+            n_possibles = [0,5,7,6]
+            if(y==0):
+                n_possibles = [0,5,7,6]
+                if(mapa[x-1][y]==5):
+                    n_possibles = [3]
+                if(mapa[x-1][y]==7):
+                    n_possibles = [1]
+                if(mapa[x-1][y]==6):
+                    n_possibles = [2]
+                
+            else:
+                n_possibles = [0,5,7,6,3,2,1]
+                if(mapa[x-1][y]==5):
+                    n_possibles = [3]
+                if(mapa[x-1][y]==7):
+                    n_possibles = [1]
+                if(mapa[x-1][y]==6):
+                    n_possibles = [2]
+                if(mapa[x-1][y]==3):
+                    n_possibles = [0]
+                if(mapa[x][y-1]==7):
+                    n_possibles = [6,7]
+                if(mapa[x][y-1]==6):
+                    n_possibles = [0]
+                if(mapa[x][y-1]==5):
+                    n_possibles = [7,6]
+            mapa[x].append(n_possibles[random.randint(0,len(n_possibles)-1)])
+
+                
 
         
-print(mapa)
+[print(x) for x in mapa]
