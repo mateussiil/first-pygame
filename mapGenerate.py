@@ -26,7 +26,7 @@ for x in range(map_x):
                 n_possibles = [0,5,7,6,3,2,1]
                 if(mapa[x-1][y]==5):
                     n_possibles = [3]
-                if(mapa[x-1][y]==7):
+                if(mapa[x-1][y]==7 or mapa[x-1][y]==1):
                     n_possibles = [1]
                 if(mapa[x-1][y]==6):
                     n_possibles = [2]
@@ -34,10 +34,12 @@ for x in range(map_x):
                     n_possibles = [0]
                 if(mapa[x][y-1]==7):
                     n_possibles = [6,7]
-                if(mapa[x][y-1]==6):
+                if(mapa[x][y-1]==6 or mapa[x][y-1]==2):
                     n_possibles = [0]
                 if(mapa[x][y-1]==5):
                     n_possibles = [7,6]
+
+
             mapa[x].append(n_possibles[random.randint(0,len(n_possibles)-1)])
 
                 
