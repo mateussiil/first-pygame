@@ -14,9 +14,9 @@ WINDOW_SIZE = (600, 400)
 screen = pygame.display.set_mode(WINDOW_SIZE, 0, 32)
 display = pygame.Surface((600, 400))
 
-player_image = pygame.image.load('chicken.png')
+player_image = pygame.image.load('/imagem/chicken.png')
 player_image.set_colorkey((255, 255, 255))
-grass_image = pygame.image.load('grass.png')
+grass_image = pygame.image.load('/imagem/grass.png')
 
 TILE_SIZE = grass_image.get_width()
 game_map = [['0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0'],
