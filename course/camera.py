@@ -93,11 +93,14 @@ def change_action(action_var, frame, new_value):
     return action_var, frame
 
 
-animation_database = {}
-animation_database["run"] = load_animation('image/run', [10, 10, 10, 10])
-animation_database["idle"] = load_animation('image/idle', [10])
+# animation_database = {}
+player.animation_database["run"] = load_animation('image/run', [10, 10, 10, 10])
+player.animation_database["idle"] = load_animation('image/idle', [10])
+player.action = 'idle'
 
-player_action = 'idle'
+# animation_database["run"] = load_animation('image/run', [10, 10, 10, 10])
+# animation_database["idle"] = load_animation('image/idle', [10])
+
 player_frame = 0
 player_flip = False
 
@@ -185,15 +188,15 @@ while True:
         player_y_momentum = 3
 
     if player_movement[0] > 0:
-        player_action, player_frame = change_action(
-            player_action, player_frame, 'run')
+        player.action, player_frame = change_action(
+            player.action, player_frame, 'run')
         player_flip = True
     if player_movement[0] == 0:
-        player_action, player_frame = change_action(
-            player_action, player_frame, 'idle')
+        player.action, player_frame = change_action(
+            player.action, player_frame, 'idle')
     if player_movement[0] < 0:
-        player_action, player_frame = change_action(
-            player_action, player_frame, 'run')
+        player.action, player_frame = change_action(
+            player.action, player_frame, 'run')
         player_flip = False
     
     player_rect, collisions = player.move(player_rect, player_movement, tile_rects)
@@ -209,10 +212,10 @@ while True:
         air_timer += 1
 
     player_frame += 1
-    if player_frame >= len(animation_database[player_action]):
+    if player_frame >= len(player.animation_database[player.action]):
         player_frame = 0
 
-    player_img_id = animation_database[player_action][player_frame]
+    player_img_id = player.animation_database[player.action][player_frame]
     player.image = animation_frames[player_img_id]
 
     display.blit(pygame.transform.flip(player.image, player_flip, False), (player_rect.x -
