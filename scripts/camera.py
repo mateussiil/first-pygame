@@ -10,4 +10,3 @@ class Camera:
     def update(self):
         self.true_pos[0] += (( self.target_pos[0] - self.true_pos[0]) - (800/3 + 10))/20
         self.true_pos[1] += (( self.target_pos[1] - self.true_pos[1]) - (600/3 + 10))/20
-        print(self.true_pos)
