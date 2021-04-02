@@ -7,6 +7,10 @@ from pygame.locals import *
 sys.path.append(".")
 from scripts.camera  import *
 from scripts.entity import *
+from scripts.player import *
+
+
+
 clock = pygame.time.Clock()
 pygame.mixer.pre_init(44100, -16, 2, 512)
 pygame.init()
@@ -19,10 +23,10 @@ WINDOW_SIZE = (800, 600)
 screen = pygame.display.set_mode(WINDOW_SIZE, 0, 32)
 display = pygame.Surface((800, 600))
 
-player = Entity(50,50, pygame.image.load('./image/idle/idle_1.png').convert())
+player = Player([50,50], pygame.image.load('./image/idle/idle_1.png').convert())
 
-player_image = pygame.image.load('./image/idle/idle_1.png').convert()
-# player_image.set_colorkey((255, 255, 255))
+# player.image = pygame.image.load('./image/idle/idle_1.png').convert()
+# player.image.set_colorkey((255, 255, 255))
 
 player_rect = pygame.Rect(100, 100, 5, 13)
 background_objects = [[0.25, [120, 10, 70, 400]], [0.25, [280, 30, 40, 400]], [
@@ -146,8 +150,7 @@ air_timer = 0
 
 true_scroll = [0, 0]
 
-player_rect = pygame.Rect(
-    50, 50, player_image.get_width(), player_image.get_height())
+player_rect = pygame.Rect(player.pos[0], player.pos[1], player.width, player.height)
 test_rect = pygame.Rect(100, 100, 100, 50)
 Camera = Camera('ok') 
 
@@ -245,9 +248,9 @@ while True:
         player_frame = 0
 
     player_img_id = animation_database[player_action][player_frame]
-    player_image = animation_frames[player_img_id]
+    player.image = animation_frames[player_img_id]
 
-    display.blit(pygame.transform.flip(player_image, player_flip, False), (player_rect.x -
+    display.blit(pygame.transform.flip(player.image, player_flip, False), (player_rect.x -
                                                                            scroll[0], player_rect.y - scroll[1]))
 
     # player_rect.y = player_location[1]
