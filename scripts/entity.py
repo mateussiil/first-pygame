@@ -1,3 +1,5 @@
+import pygame
+
 class Entity:
     def __init__(self, pos, image):
         self.pos = pos
@@ -7,6 +9,7 @@ class Entity:
         self.movement = [0,0]
         self.action = None
         self.animation_database = {}
+        self.animation_frames = {}
     
     def move(self, rect, movement, tiles):
         collision_types = {"top": False, "bottom": False,
@@ -42,7 +45,6 @@ class Entity:
         return hit_list
 
     def load_animation(self, path, frame_durations):
-        global animation_frames
         animation_name = path.split('/')[-1]
         animation_frame_data = []
         n = 1
@@ -51,7 +53,7 @@ class Entity:
             img_loc = path + '/' + animation_frame_id + '.png'
             animation_image = pygame.image.load(img_loc)
             # animation_image.set_colorkey((255, 255, 255)) fundo da imagem
-            animation_frames[animation_frame_id] = animation_image.copy()
+            self.animation_frames[animation_frame_id] = animation_image.copy()
             for i in range(frame):
                 animation_frame_data.append(animation_frame_id)
             n += 1

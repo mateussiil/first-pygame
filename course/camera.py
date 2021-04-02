@@ -10,7 +10,6 @@ from scripts.entity import *
 from scripts.player import *
 
 
-
 clock = pygame.time.Clock()
 pygame.mixer.pre_init(44100, -16, 2, 512)
 pygame.init()
@@ -65,41 +64,11 @@ def load_map(path):
 
 game_map = load_map('./map/map')
 
-global animation_frames
-animation_frames = {}
+player.animation_frames = {}
 
-
-def load_animation(path, frame_durations):
-    global animation_frames
-    animation_name = path.split('/')[-1]
-    animation_frame_data = []
-    n = 1
-    for frame in frame_durations:
-        animation_frame_id = animation_name + '_' + str(n)
-        img_loc = path + '/' + animation_frame_id + '.png'
-        animation_image = pygame.image.load(img_loc)
-        # animation_image.set_colorkey((255, 255, 255)) fundo da imagem
-        animation_frames[animation_frame_id] = animation_image.copy()
-        for i in range(frame):
-            animation_frame_data.append(animation_frame_id)
-        n += 1
-    return animation_frame_data
-
-
-def change_action(action_var, frame, new_value):
-    if action_var != new_value:
-        action_var = new_value
-        frame = 0
-    return action_var, frame
-
-
-# animation_database = {}
-player.animation_database["run"] = load_animation('image/run', [10, 10, 10, 10])
-player.animation_database["idle"] = load_animation('image/idle', [10])
+player.animation_database["run"] = player.load_animation('image/run', [10, 10, 10, 10])
+player.animation_database["idle"] = player.load_animation('image/idle', [10])
 player.action = 'idle'
-
-# animation_database["run"] = load_animation('image/run', [10, 10, 10, 10])
-# animation_database["idle"] = load_animation('image/idle', [10])
 
 player_frame = 0
 player_flip = False
@@ -188,14 +157,14 @@ while True:
         player_y_momentum = 3
 
     if player_movement[0] > 0:
-        player.action, player_frame = change_action(
+        player.action, player_frame = player.change_action(
             player.action, player_frame, 'run')
         player_flip = True
     if player_movement[0] == 0:
-        player.action, player_frame = change_action(
+        player.action, player_frame = player.change_action(
             player.action, player_frame, 'idle')
     if player_movement[0] < 0:
-        player.action, player_frame = change_action(
+        player.action, player_frame = player.change_action(
             player.action, player_frame, 'run')
         player_flip = False
     
@@ -216,7 +185,7 @@ while True:
         player_frame = 0
 
     player_img_id = player.animation_database[player.action][player_frame]
-    player.image = animation_frames[player_img_id]
+    player.image = player.animation_frames[player_img_id]
 
     display.blit(pygame.transform.flip(player.image, player_flip, False), (player_rect.x -
                                                                            scroll[0], player_rect.y - scroll[1]))
