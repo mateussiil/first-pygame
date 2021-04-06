@@ -1,3 +1,4 @@
+
 import pygame
 import sys
 import random
@@ -5,10 +6,10 @@ import random
 from pygame.locals import *
 
 sys.path.append(".")
-from scripts.camera  import *
-from scripts.entity import *
-from scripts.player import *
 
+from scripts.player import *
+from scripts.entity import *
+from scripts.camera import *
 
 clock = pygame.time.Clock()
 pygame.mixer.pre_init(44100, -16, 2, 512)
@@ -22,12 +23,14 @@ WINDOW_SIZE = (800, 600)
 screen = pygame.display.set_mode(WINDOW_SIZE, 0, 32)
 display = pygame.Surface((800, 600))
 
-player = Player([50,50], pygame.image.load('./image/idle/idle_1.png').convert())
+player = Player([50, 50], pygame.image.load(
+    './image/idle/idle_1.png').convert())
+enemy = Entity([50, 50], pygame.image.load(
+    './image/idle/idle_1.png').convert())
 
 # player.image = pygame.image.load('./image/idle/idle_1.png').convert()
 # player.image.set_colorkey((255, 255, 255))
 
-player_rect = pygame.Rect(100, 100, 5, 13)
 background_objects = [[0.25, [120, 10, 70, 400]], [0.25, [280, 30, 40, 400]], [
     0.5, [30, 40, 40, 400]], [0.5, [130, 90, 100, 400]], [0.5, [300, 80, 120, 400]]]
 
@@ -50,7 +53,6 @@ pygame.mixer.music.play(-1)
 
 TILE_SIZE = grass_image.get_width()
 
-
 def load_map(path):
     f = open(path+'.txt', 'r')
     data = f.read()
@@ -65,10 +67,18 @@ def load_map(path):
 game_map = load_map('./map/map')
 
 player.animation_frames = {}
+enemy.animation_frames = {}
 
-player.animation_database["run"] = player.load_animation('image/run', [10, 10, 10, 10])
+player.animation_database["run"] = player.load_animation(
+    'image/run', [10, 10, 10, 10])
 player.animation_database["idle"] = player.load_animation('image/idle', [10])
 player.action = 'idle'
+
+enemy.animation_database["run"] = enemy.load_animation(
+    'image/run', [10, 10, 10, 10])
+enemy.animation_database["idle"] = enemy.load_animation('image/idle', [10])
+enemy.action = 'idle'
+
 
 player_frame = 0
 player_flip = False
@@ -80,25 +90,26 @@ moving_left = False
 moving_up = False
 moving_down = False
 
-player_location = [50, 50]
 player_y_momentum = 0
 air_timer = 0
 
 true_scroll = [0, 0]
 
-player_rect = pygame.Rect(player.pos[0], player.pos[1], player.width, player.height)
+player.pos = pygame.Rect(player.pos[0], player.pos[1], player.width, player.height)
+enemy.pos = pygame.Rect(enemy.pos[0], enemy.pos[1], enemy.width, enemy.height)
+
 test_rect = pygame.Rect(100, 100, 100, 50)
-Camera = Camera('ok') 
+Camera = Camera('ok')
 
 while True:
     display.fill((146, 244, 255))
 
     if grass_sound_timer > 0:
         grass_sound_timer -= 1
-        
-    Camera.set_target([player_rect.x, player_rect.y])
+
+    Camera.set_target([player.pos.x, player.pos.y])
     Camera.update()
-    
+
     scroll = Camera.true_pos
     scroll[0] = int(scroll[0])
     scroll[1] = int(scroll[1])
@@ -145,6 +156,20 @@ while True:
         y += 1
 
     player_movement = [0, 0]
+    
+    enemy_moving_right = [0, 0]
+
+    if enemy_moving_right == True:
+        enemy_moving_right[0] += 5
+    if enemy_moving_right == True:
+        enemy_moving_right[0] -= 5
+
+    if moving_right == True:
+        player_movement[0] += 5
+    if moving_left == True:
+        player_movement[0] -= 5
+
+    player_movement = [0, 0]
 
     if moving_right == True:
         player_movement[0] += 5
@@ -167,16 +192,16 @@ while True:
         player.action, player_frame = player.change_action(
             player.action, player_frame, 'run')
         player_flip = False
-    
-    player_rect, collisions = player.move(player_rect, player_movement, tile_rects)
+
+    player.pos, collisions = player.move(player.pos, player_movement, tile_rects)
 
     if collisions["bottom"]:
         player_y_momentum = 0
         air_timer = 0
         if player_movement[0] != 0:
-             if grass_sound_timer == 0:
-                 grass_sound_timer =30
-                 random.choice(grass_sounds).play()
+            if grass_sound_timer == 0:
+                grass_sound_timer = 30
+                random.choice(grass_sounds).play()
     else:
         air_timer += 1
 
@@ -187,10 +212,10 @@ while True:
     player_img_id = player.animation_database[player.action][player_frame]
     player.image = player.animation_frames[player_img_id]
 
-    display.blit(pygame.transform.flip(player.image, player_flip, False), (player_rect.x -
-                                                                           scroll[0], player_rect.y - scroll[1]))
+    display.blit(pygame.transform.flip(player.image, player_flip, False), (player.pos.x -
+                                                                           scroll[0], player.pos.y - scroll[1]))
 
-    # player_rect.y = player_location[1]
+    # player.pos.y = player_location[1]
 
     for event in pygame.event.get():
         if event.type == QUIT:
