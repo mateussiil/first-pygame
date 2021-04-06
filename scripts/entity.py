@@ -10,6 +10,7 @@ class Entity:
         self.action = None
         self.animation_database = {}
         self.animation_frames = {}
+        self.rect = pygame.Rect(self.pos[0], self.pos[1], self.width, self.height)
     
     def move(self, rect, movement, tiles):
         collision_types = {"top": False, "bottom": False,
@@ -43,6 +44,10 @@ class Entity:
             if rect.colliderect(tile):
                 hit_list.append(tile)
         return hit_list
+    
+    def updateRect(self):
+        print(self.pos)
+        self.rect = pygame.Rect(self.pos[0], self.pos[1], self.width, self.height)
 
     def load_animation(self, path, frame_durations):
         animation_name = path.split('/')[-1]
